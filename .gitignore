@@ -1,1 +1,17 @@
-Olink_fulldata.xlsx
+# Quarto generated files
+*.docx
+*.js
+*.css
+_site/
+_html/
+_quarto_cache/
+
+# R-related
+.Rhistory
+.RData
+.Rproj.user
+
+#plots and analysis
+.pptx
+.png
+.xlsx
