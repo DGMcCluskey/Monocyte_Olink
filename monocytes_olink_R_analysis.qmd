@@ -10,6 +10,7 @@ library(readxl)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(RColorBrewer)
 ```
 
 ### load in data and keep only relevant columns
@@ -23,9 +24,18 @@ df <- filter(df, AssayQC %in% "PASS")
 df$SampleID <- sub("AL_", "", x = df$SampleID)
 df <- df %>% separate(SampleID, into = c("subset", "time"), sep = "_", remove = F)
 ```
+
+## plot expression in IM vs CM at 24 hours
+
 ```{r}
 plot_input <- filter(df, time == "24h")
 plot_input <- plot_input[, c(2,4,5)]
 plot_input <- pivot_wider(plot_input, names_from = "subset", values_from = "Count")
-ggplot(plot_input, aes(x = log(IM), y = log(CM)))+geom_point()
+plot_input <- plot_input %>%
+  mutate(deviation = log(IM) - log(CM))
+ggplot(plot_input, aes(x = log(IM), y = log(CM), fill = deviation))+
+    geom_point(shape = 21, colour = "black")+
+    geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black")+
+    xlim(0, max(log(plot_input$IM+1)))+ylim(0,max(log(plot_input$CM+1)))+
+    theme_bw()+scale_fill_viridis_c()
 ```
