@@ -12,6 +12,7 @@ _quarto_cache/
 .Rproj.user
 
 #plots and analysis
-.pptx
-.png
-.xlsx
+*.pptx
+*.png
+*.xlsx
+Olink_fulldata.xlsx

@@ -82,15 +82,16 @@ plot_input <- filter(plot_input, subset %in% "IM")
 plot_input <- plot_input[, c(3,4,5)]
 plot_input <- plot_input %>%
   pivot_wider(names_from = time, values_from = Count) %>%
-  mutate(Difference = log10(`24h`) - log10(baseline))
-plot_input <- plot_input %>%
+  mutate(Difference = log10(`24h`) - log10(baseline),
+  log2fc = log2(`24h`/baseline),
+  fold_change = (`24h`/baseline))
+  plot_input <- plot_input %>%
   pivot_longer(
     cols = c(baseline, `24h`),
     names_to = "time",
     values_to = "Count"
   )
-
-plot2 <- ggplot(plot_input, aes(x = reorder(Assay, Difference), y = Count, colour = time,
+plot2 <- ggplot(plot_input, aes(x = reorder(Assay, log2fc), y = Count, colour = time,
 shape = time, group=Assay))+
     geom_line(colour = "black")+
     geom_point(size=4)+
@@ -105,4 +106,34 @@ shape = time, group=Assay))+
 plot2
 ggsave(plot = plot2, filename = "top20genes_IM_baseline_24hr.png", dpi = 500,
 height = 5, width = 8)
+```
+
+## plot change in expression at 24hr compared to baseline in the top genes
+## plot3 is log2fc
+## plot4 is absolute fold change
+
+```{r}
+plot3 <- ggplot(plot_input, aes(x = reorder(Assay,log2fc), y = log2fc))+
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "black")+
+    geom_col(fill = "mediumseagreen")+
+    theme_bw()+
+    theme(axis.text = element_text(size = 16, colour = "black"))+
+    theme(axis.title = element_text(size = 16, colour = "black", face = "bold"))+
+    theme(legend.text = element_text(size = 12))+
+    xlab("Gene")+ylab("Log2FC expression")+coord_flip()
+ggsave(plot = plot3, filename = "top20genes_IM_baseline_24hr._log2fc.barplot.png", dpi = 500,
+height = 5, width = 8)
+plot3
+
+plot4 <- ggplot(plot_input, aes(x = reorder(Assay,fold_change), y = fold_change))+
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "black")+
+    geom_col(fill = "darkorchid2")+
+    theme_bw()+
+    theme(axis.text = element_text(size = 16, colour = "black"))+
+    theme(axis.title = element_text(size = 16, colour = "black", face = "bold"))+
+    theme(legend.text = element_text(size = 12))+
+    xlab("Gene")+ylab("Log2FC expression")+coord_flip()
+ggsave(plot = plot4, filename = "top20genes_IM_baseline_24hr_abs_fc.barplot.png", dpi = 500,
+height = 5, width = 8)
+plot4
 ```
