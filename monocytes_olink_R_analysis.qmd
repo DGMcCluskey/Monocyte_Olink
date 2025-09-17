@@ -1,0 +1,19 @@
+---
+title: "Untitled"
+format: html
+---
+
+## ANALYSIS OF OLINK DATA OF MONOCYTE SBSETS AT BASELINE AND 24HR AFTER ECOLI INFECTION
+### proteins from serum of classical, intermediate and non-classical monos measured in 1 patient
+```{r}
+library(readxl)
+library(dplyr)
+```
+
+### load in data and keep only relevant columns
+### remove the 6 proteins with QC warnings
+```{r}
+df <- read_xlsx("Olink_fulldata.xlsx")
+df <- df[, c(1,8,12,13,14,17)]
+df <- filter(df, AssayQC %in% "PASS")
+```
