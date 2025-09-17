@@ -9,6 +9,7 @@ format: html
 library(readxl)
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 ```
 
 ### load in data and keep only relevant columns
@@ -21,4 +22,10 @@ df <- df[, c(1,8,12,13,14,17)]
 df <- filter(df, AssayQC %in% "PASS")
 df$SampleID <- sub("AL_", "", x = df$SampleID)
 df <- df %>% separate(SampleID, into = c("subset", "time"), sep = "_", remove = F)
+```
+```{r}
+plot_input <- filter(df, time == "24h")
+plot_input <- plot_input[, c(2,4,5)]
+plot_input <- pivot_wider(plot_input, names_from = "subset", values_from = "Count")
+ggplot(plot_input, aes(x = log(IM), y = log(CM)))+geom_point()
 ```
