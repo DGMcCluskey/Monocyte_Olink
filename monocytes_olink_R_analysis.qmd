@@ -161,3 +161,24 @@ ggsave(plot = plot5, filename = "top20genes_IM_baseline_24hr_abs_fc.barplot.png"
 height = 6, width = 8)
 plot5
 ```
+
+## filter proteins further by taking those with a fold change >2
+## plot their expression across all monocyte subsets and times
+```{r}
+top_genes <- filter(plot_input, fold_change > 2)
+top_genes <- top_genes$Assay
+top_genes_df <- filter(df, Assay %in% top_genes)
+top_genes_df$time <- factor(top_genes_df$time, levels = c("baseline", "24h"))
+
+plot6 <- ggplot(top_genes_df, aes(x = subset, y = Count, fill = time))+geom_col(position = position_dodge(width = 0.5), width = 0.5)+
+    facet_wrap(~Assay, scales = "free_y", ncol = 5)+
+    theme_bw()+scale_fill_manual(values = c("grey50", "darkred"))+
+    theme(strip.text = element_text(size = 14, colour = "black", face = "bold"))+
+    theme(axis.text = element_text(size = 14, colour = "black"))+
+    theme(axis.title = element_text(size = 16, colour = "black", face = "bold"))+
+    theme(legend.text = element_text(size = 12))+
+    xlab("Monocyte subset")+ylab("Log10 expression")
+plot6
+ggsave(plot = plot6, filename = "top10genes_expression_all_monos.png", dpi = 500,
+height = 6, width = 12)
+```
