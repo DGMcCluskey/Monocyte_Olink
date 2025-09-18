@@ -159,6 +159,7 @@ plot5 <- ggplot(plot_input, aes(x = reorder(Assay,fold_change), y = fold_change)
     xlab(NULL)+ylab("Absolute FC expression 24hrs compared to baseline")+coord_flip()
 ggsave(plot = plot5, filename = "top20genes_IM_baseline_24hr_abs_fc.barplot.png", dpi = 500,
 height = 6, width = 8)
+a
 plot5
 ```
 
